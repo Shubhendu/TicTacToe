@@ -66,7 +66,8 @@ public class StartGameRequestProcessor implements RequestProcessor {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral,
 					"Unable to fetch user information from the channel.", null);
 		}
-		boolean isValidOpponent = channelUsers.stream().anyMatch(channelUser -> opponentUserId.equals(channelUsers));
+
+		boolean isValidOpponent = channelUsers.stream().anyMatch(channelUser -> opponentUserId.equals(channelUser));
 		if (!isValidOpponent) {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral,
 					"User name " + opponentUserName + " doesn't exist in the given channel.", null);
