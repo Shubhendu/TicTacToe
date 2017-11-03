@@ -30,6 +30,7 @@ We are using maven to build this application.
 	For example, /Users/abc/Documents/software/apache-tomcat-8.5.23. 
 ```
 - Cloud
+
 This application is currently deployed on AWS Elastic Beanstalk. 
 [Instructions can be found here](http://docs.aws.amazon.com/gettingstarted/latest/deploy/deploying-with-elastic-beanstalk.html)
 
