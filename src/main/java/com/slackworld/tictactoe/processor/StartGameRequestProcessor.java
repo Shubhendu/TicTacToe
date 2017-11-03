@@ -28,7 +28,7 @@ public class StartGameRequestProcessor implements RequestProcessor {
 		if (gameRepository.isAnyGameActiveInChannel(request.getChannelId())) {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral, "Active game in progress in this channel.", null);
 		}
-		
+
 		String[] commands = request.getText().split(Constant.PLAYER_MOVE_SEPARATOR);
 
 		if (commands.length < 2) {
@@ -59,12 +59,14 @@ public class StartGameRequestProcessor implements RequestProcessor {
 
 		if (boardSize < 3) {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral,
-					"This game needs to be played at least in :three: :negative_squared_cross_mark: :three: board size.", null);
+					"This game needs to be played at least in :three: :negative_squared_cross_mark: :three: board size.",
+					null);
 		}
 
 		if (boardSize > 6) {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral,
-					"This game is in beta version and currently we only support max :six: :negative_squared_cross_mark: :six: board size.", null);
+					"This game is in beta version and currently we only support max :six: :negative_squared_cross_mark: :six: board size.",
+					null);
 		}
 		List<String> channelUsers = slackClient.getChannelUsers(request.getChannelId());
 
@@ -84,8 +86,11 @@ public class StartGameRequestProcessor implements RequestProcessor {
 
 		Game game = new Game(boardSize, p1, p2);
 		gameRepository.startGameInChannel(request.getChannelId(), game);
-		return new SlackTicTacToeResponse(ResponseType.in_channel, ":new: game of Tic Tac Toe has started between "
-				+ p1.getSlackUserName() + " :crossed_swords: " + p2.getSlackUserName(), null);
+		return new SlackTicTacToeResponse(ResponseType.in_channel,
+				":new: game of Tic Tac Toe has started between " + p1.getSlackUserName() + " :crossed_swords: "
+						+ p2.getSlackUserName() + " on a board of size " + boardSize + ":negative_squared_cross_mark: "
+						+ boardSize,
+				null);
 	}
 
 }

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import com.slackworld.tictactoe.controller.SlackTicTacToeController;
 import com.slackworld.tictactoe.dto.request.SlackTicTacToeRequest;
 import com.slackworld.tictactoe.dto.response.SlackTicTacToeResponse;
 import com.slackworld.tictactoe.enums.ResponseType;
@@ -28,7 +27,7 @@ import com.slackworld.tictactoe.util.Constant;
 @Service
 public class TicTacToeService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SlackTicTacToeController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TicTacToeService.class);
 
 	@Autowired
 	private Environment environment;
@@ -66,42 +65,44 @@ public class TicTacToeService {
 		return null;
 	}
 
-	public SlackTicTacToeResponse validateAndProcessRequest(SlackTicTacToeRequest request) {
+	public SlackTicTacToeResponse validateAndProcessRequest(SlackTicTacToeRequest request) throws Exception {
 
 		LOGGER.info(
 				"[SLACK_TIC_TAC_TOE_SERVICE_CALLED]: token : {}, channel_id : {}, user_id : {}, user_name : {}, command : {}, text : {}, response_url : {}",
 				request.getToken(), request.getChannelId(), request.getUserId(), request.getUserName(),
 				request.getCommand(), request.getText(), request.getResponseUrl());
 
-		try {
-			SlackTicTacToeResponse response = validateRequest(request);
-			if (response != null) {
-				return response;
-			}
-
-			final String[] commands = request.getText().split(Constant.PLAYER_MOVE_SEPARATOR);
-			final String cmd = commands[0];
-			if (StringUtils.isEmpty(cmd)) {
-				return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid command. /n Please use /ttt help to check the correct usage.", null);
-			}
-			switch (cmd.toLowerCase()) {
-			case "start":
-				return startGameRequestProcessor.process(request);
-			case "move":
-				return moveRequestProcessor.process(request);
-			case "status":
-				return gameStatusRequestProcessor.process(request);
-			case "help":
-				return helpRequestProcessor.process(request);
-			case "end":
-				return endGameRequestProcessor.process(request);
-			default:
-				return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid command. /n Please use /ttt help to check the correct usage.", null);
-			}
-		} catch (Exception e) {
-			LOGGER.error("Something went wrong", e);
-			return new SlackTicTacToeResponse(ResponseType.ephemeral,
-					Constant.GENERIC_ERROR_MESSAGE, null);
+		SlackTicTacToeResponse response = validateRequest(request);
+		if (response != null) {
+			return response;
 		}
+		
+		if (StringUtils.isEmpty(request.getText())) {
+			return new SlackTicTacToeResponse(ResponseType.ephemeral, Constant.INVALID_COMMAND, null);
+		}
+
+		String[] commands = request.getText().split(Constant.PLAYER_MOVE_SEPARATOR);
+		String cmd = commands[0];
+		if (StringUtils.isEmpty(cmd)) {
+			return new SlackTicTacToeResponse(ResponseType.ephemeral,
+					Constant.INVALID_COMMAND, null);
+		}
+		
+		switch (cmd.toLowerCase()) {
+		case "start":
+			return startGameRequestProcessor.process(request);
+		case "move":
+			return moveRequestProcessor.process(request);
+		case "status":
+			return gameStatusRequestProcessor.process(request);
+		case "help":
+			System.out.println("Calling help");
+			return helpRequestProcessor.process(request);
+		case "end":
+			return endGameRequestProcessor.process(request);
+		default:
+			return new SlackTicTacToeResponse(ResponseType.ephemeral, Constant.INVALID_COMMAND, null);
+		}
+
 	}
 }

@@ -27,4 +27,15 @@ public class BoardUtil {
 		currentBoard.append("");
 		return currentBoard.toString();
 	}
+
+	public static String getHelpText() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(
+				"/ttt start [userName] [boardSize] - Challenge a user to play a new game with default board size 3 X 3\n")
+				.append("/ttt status - Get the current status of the game played in the channel.\n")
+				.append("/ttt move [row] [column] - Play your next move. The row and column index starts with 1.\n")
+				.append("/ttt end - End the current game\n").append("/ttt help - Help");
+		sb.append("\nNote - All commands are case insensitive");
+		return sb.toString();
+	}
 }
