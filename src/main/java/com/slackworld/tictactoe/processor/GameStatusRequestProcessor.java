@@ -9,6 +9,7 @@ import com.slackworld.tictactoe.enums.ResponseType;
 import com.slackworld.tictactoe.model.Game;
 import com.slackworld.tictactoe.repository.GameRepository;
 import com.slackworld.tictactoe.util.BoardUtil;
+import com.slackworld.tictactoe.util.Constant;
 
 @Service
 public class GameStatusRequestProcessor implements RequestProcessor {
@@ -19,17 +20,17 @@ public class GameStatusRequestProcessor implements RequestProcessor {
 	@Override
 	public SlackTicTacToeResponse process(SlackTicTacToeRequest request) {
 		if (!gameRepository.isAnyGameActiveInChannel(request.getChannelId())) {
-			return new SlackTicTacToeResponse(ResponseType.ephemeral, "Sorry, no game in progress", null);
+			return new SlackTicTacToeResponse(ResponseType.ephemeral, Constant.NO_GAME_IN_PROGRESS, null);
 		}
 		Game currentGameInChannel = gameRepository.getGameByChannelId(request.getChannelId());
-		return new SlackTicTacToeResponse(ResponseType.in_channel, getGameStatusMessage(currentGameInChannel), null);
+		return new SlackTicTacToeResponse(ResponseType.ephemeral, getGameStatusMessage(currentGameInChannel), null);
 	}
 
 	private String getGameStatusMessage(Game game) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Current Game Staus: " + game.getStatus());
-		sb.append(" Player1: " + game.getPlayer1().getUserName());
-		sb.append(" Player2: " + game.getPlayer2().getUserName());
+		sb.append("Current Game Status: " + game.getStatus());
+		sb.append("\n Player 1: " + game.getPlayer1().getSlackUserName());
+		sb.append("\n Player 2: " + game.getPlayer2().getSlackUserName());
 		sb.append(BoardUtil.drawCurrentBoardInGame(game));
 		return sb.toString();
 	}

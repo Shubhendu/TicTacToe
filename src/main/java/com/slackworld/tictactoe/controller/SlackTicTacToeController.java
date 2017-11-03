@@ -20,6 +20,7 @@ import com.slackworld.tictactoe.dto.response.Attachment;
 import com.slackworld.tictactoe.dto.response.SlackTicTacToeResponse;
 import com.slackworld.tictactoe.enums.ResponseType;
 import com.slackworld.tictactoe.service.TicTacToeService;
+import com.slackworld.tictactoe.util.Constant;
 
 /**
  * @author SSingh
@@ -33,10 +34,10 @@ public class SlackTicTacToeController {
 	@Autowired
 	private TicTacToeService service;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/health-check", method = RequestMethod.GET)
 	@ResponseBody
 	public String getMainPage() {
-		return "Hello world !!";
+		return "The awesome world of Tic Tac Toe is up and running !!";
 	}
 
 	@RequestMapping(value = "/static-response", method = RequestMethod.GET)
@@ -48,7 +49,7 @@ public class SlackTicTacToeController {
 
 	private SlackTicTacToeResponse buildResponse() {
 		SlackTicTacToeResponse response = new SlackTicTacToeResponse();
-		response.setResponseType(ResponseType.in_channel);
+		response.setResponse_type(ResponseType.in_channel);
 		response.setText("Let's have some fun !!");
 
 		Attachment attachment = new Attachment();
@@ -71,7 +72,7 @@ public class SlackTicTacToeController {
 		slackRequest.setUserId(request.getParameter("user_id"));
 		slackRequest.setUserName("@" + request.getParameter("user_name"));
 		slackRequest.setCommand(request.getParameter("command"));
-		slackRequest.setText(request.getParameter("text"));
+		slackRequest.setText(request.getParameter("text") != null ? request.getParameter("text").trim() : null);
 		slackRequest.setResponseUrl(request.getParameter("response_url"));
 
 		return slackRequest;
@@ -81,16 +82,13 @@ public class SlackTicTacToeController {
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)
 	public SlackTicTacToeResponse play(HttpServletRequest request) {
-
-		SlackTicTacToeRequest slackRequest = buildRequest(request);
-
-		LOGGER.info(
-				"[SLACK_TIC_TAC_API_CALLED]: token : {}, channel_id : {}, user_id : {}, user_name : {}, command : {}, text : {}, response_url : {}",
-				slackRequest.getToken(), slackRequest.getChannelId(), slackRequest.getUserId(),
-				slackRequest.getUserName(), slackRequest.getCommand(), slackRequest.getText(),
-				slackRequest.getResponseUrl());
-
-		return service.validateAndProcessRequest(slackRequest);
+		try {
+			SlackTicTacToeRequest slackRequest = buildRequest(request);
+			return service.validateAndProcessRequest(slackRequest);
+		} catch (Exception e) {
+			LOGGER.error("Something went wrong", e);
+			return new SlackTicTacToeResponse(ResponseType.ephemeral, Constant.GENERIC_ERROR_MESSAGE, null);
+		}
 	}
 
 }

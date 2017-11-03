@@ -13,7 +13,7 @@ import com.slackworld.tictactoe.enums.ResponseType;
  *
  */
 public class SlackTicTacToeResponse {
-	private ResponseType responseType;
+	private ResponseType response_type;
 	private String text;
 	private List<Attachment> attachments;
 
@@ -21,19 +21,19 @@ public class SlackTicTacToeResponse {
 
 	}
 
-	public SlackTicTacToeResponse(ResponseType responseType, String text, List<Attachment> attachments) {
+	public SlackTicTacToeResponse(ResponseType response_type, String text, List<Attachment> attachments) {
 		super();
-		this.responseType = responseType;
+		this.response_type = response_type;
 		this.text = text;
 		this.attachments = attachments;
 	}
 
-	public ResponseType getResponseType() {
-		return responseType;
+	public ResponseType getResponse_type() {
+		return response_type;
 	}
 
-	public void setResponseType(ResponseType responseType) {
-		this.responseType = responseType;
+	public void setResponse_type(ResponseType response_type) {
+		this.response_type = response_type;
 	}
 
 	public String getText() {

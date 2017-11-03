@@ -12,12 +12,22 @@ import com.slackworld.tictactoe.util.Constant;
 
 @Service
 public class SlackClient {
+	class SlackApiResponse {
+		String ok;
+		Channel channel;
+	}
+
+	class Channel {
+		String id;
+		String name;
+		List<String> members;
+	}
 
 	@Autowired
 	private Environment environment;
 
 	private String callSlackChannelInfoApi(String channelId) {
-		final String apiToken = environment.getProperty(Constant.SLACK_API_TOKEN);
+		String apiToken = environment.getProperty(Constant.SLACK_API_TOKEN);
 		String uri = Constant.SLACK_BASE_URL + "?token=" + apiToken + "&channel=" + channelId;
 
 		RestTemplate restTemplate = new RestTemplate();
@@ -39,17 +49,5 @@ public class SlackClient {
 			return null;
 		}
 		return getMembers(response);
-	}
-
-	class SlackApiResponse {
-		String ok;
-		Channel channel;
-	}
-
-	class Channel {
-		String id;
-		String name;
-		List<String> members;
-
 	}
 }

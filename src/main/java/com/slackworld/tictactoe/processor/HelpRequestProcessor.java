@@ -17,7 +17,7 @@ public class HelpRequestProcessor implements RequestProcessor {
 
 	private SlackTicTacToeResponse buildHelpResponse() {
 		SlackTicTacToeResponse response = new SlackTicTacToeResponse();
-		response.setResponseType(ResponseType.in_channel);
+		response.setResponse_type(ResponseType.ephemeral);
 		response.setText("Let's have some fun !!");
 
 		Attachment attachment = new Attachment();
@@ -25,16 +25,16 @@ public class HelpRequestProcessor implements RequestProcessor {
 		response.addAttachment(attachment);
 
 		return response;
-
 	}
 
 	private String getHelpText() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(
 				"/ttt start [userName] [boardSize] - Challenge a user to play a new game with default board size 3 X 3\n")
-				.append("/ttt status - Get the current status of the current game\n")
-				.append("/ttt move [row] [column] - Play your next move (the row and column index starts with 1)\n")
-				.append("/ttt end - End the current game\n" + "/ttt help - Help");
+				.append("/ttt status - Get the current status of the game played in the channel.\n")
+				.append("/ttt move [row] [column] - Play your next move. The row and column index starts with 1.\n")
+				.append("/ttt end - End the current game\n").append("/ttt help - Help");
+		sb.append("\nNote - All commands are case insensitive");
 		return sb.toString();
 	}
 }

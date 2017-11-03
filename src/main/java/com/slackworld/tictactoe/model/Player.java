@@ -5,7 +5,6 @@ public class Player {
 	private String userName;
 
 	public Player() {
-
 	}
 
 	public Player(String id, String name) {
@@ -27,6 +26,10 @@ public class Player {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getSlackUserName() {
+		return "*<" + this.userName + ">*";
 	}
 
 	@Override

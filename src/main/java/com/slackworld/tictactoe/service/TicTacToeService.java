@@ -4,10 +4,13 @@
 package com.slackworld.tictactoe.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.slackworld.tictactoe.controller.SlackTicTacToeController;
 import com.slackworld.tictactoe.dto.request.SlackTicTacToeRequest;
 import com.slackworld.tictactoe.dto.response.SlackTicTacToeResponse;
 import com.slackworld.tictactoe.enums.ResponseType;
@@ -24,7 +27,9 @@ import com.slackworld.tictactoe.util.Constant;
  */
 @Service
 public class TicTacToeService {
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SlackTicTacToeController.class);
+
 	@Autowired
 	private Environment environment;
 
@@ -45,21 +50,17 @@ public class TicTacToeService {
 
 	private SlackTicTacToeResponse validateRequest(SlackTicTacToeRequest request) {
 
-		final String tokenToValidate = request.getToken();
+		String requestToken = request.getToken();
 
-		final String SLACK_TTT_TOKEN = environment.getProperty(Constant.SLACK_TTT_COMMAND_TOKEN);
+		String SLACK_TTT_TOKEN = environment.getProperty(Constant.SLACK_TTT_COMMAND_TOKEN);
 
 		if (StringUtils.isEmpty(SLACK_TTT_TOKEN)) {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral,
 					"Failed to read channel's token value from environment variable", null);
 		}
 
-		if (!SLACK_TTT_TOKEN.equals(tokenToValidate)) {
+		if (!SLACK_TTT_TOKEN.equals(requestToken)) {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid token provided", null);
-		}
-
-		if (!SLACK_TTT_TOKEN.equals(tokenToValidate)) {
-			return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid command", null);
 		}
 
 		return null;
@@ -67,26 +68,40 @@ public class TicTacToeService {
 
 	public SlackTicTacToeResponse validateAndProcessRequest(SlackTicTacToeRequest request) {
 
-		SlackTicTacToeResponse response = validateRequest(request);
-		if (response != null) {
-			return response;
-		}
+		LOGGER.info(
+				"[SLACK_TIC_TAC_TOE_SERVICE_CALLED]: token : {}, channel_id : {}, user_id : {}, user_name : {}, command : {}, text : {}, response_url : {}",
+				request.getToken(), request.getChannelId(), request.getUserId(), request.getUserName(),
+				request.getCommand(), request.getText(), request.getResponseUrl());
 
-		final String[] commands = request.getText().split(Constant.PLAYER_MOVE_SEPARATOR);
-		final String cmd = commands[0];
-		switch (cmd) {
-		case "start":
-			return startGameRequestProcessor.process(request);
-		case "mark":
-			return moveRequestProcessor.process(request);
-		case "status":
-			return gameStatusRequestProcessor.process(request);
-		case "help":
-			return helpRequestProcessor.process(request);
-		case "end":
-			return endGameRequestProcessor.process(request);
-		default:
-			return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid command", null);
+		try {
+			SlackTicTacToeResponse response = validateRequest(request);
+			if (response != null) {
+				return response;
+			}
+
+			final String[] commands = request.getText().split(Constant.PLAYER_MOVE_SEPARATOR);
+			final String cmd = commands[0];
+			if (StringUtils.isEmpty(cmd)) {
+				return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid command. /n Please use /ttt help to check the correct usage.", null);
+			}
+			switch (cmd.toLowerCase()) {
+			case "start":
+				return startGameRequestProcessor.process(request);
+			case "move":
+				return moveRequestProcessor.process(request);
+			case "status":
+				return gameStatusRequestProcessor.process(request);
+			case "help":
+				return helpRequestProcessor.process(request);
+			case "end":
+				return endGameRequestProcessor.process(request);
+			default:
+				return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid command. /n Please use /ttt help to check the correct usage.", null);
+			}
+		} catch (Exception e) {
+			LOGGER.error("Something went wrong", e);
+			return new SlackTicTacToeResponse(ResponseType.ephemeral,
+					Constant.GENERIC_ERROR_MESSAGE, null);
 		}
 	}
 }

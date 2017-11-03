@@ -26,28 +26,27 @@ public class MoveRequestProcessor implements RequestProcessor {
 
 	private SlackTicTacToeResponse markBoard(SlackTicTacToeRequest request) {
 		if (!gameRepository.isAnyGameActiveInChannel(request.getChannelId())) {
-			return new SlackTicTacToeResponse(ResponseType.ephemeral, "No game is in progress at this channel", null);
+			return new SlackTicTacToeResponse(ResponseType.ephemeral, Constant.NO_GAME_IN_PROGRESS, null);
 		}
 		Game game = gameRepository.getGameByChannelId(request.getChannelId());
-		
-		String commandText = request.getText().trim();
-		String[] tokens = commandText.split(Constant.PLAYER_MOVE_SEPARATOR);
 
-		if (tokens.length < 3) {
-			return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid command", null);
+		String commandText = request.getText().trim();
+		String[] commands = commandText.split(Constant.PLAYER_MOVE_SEPARATOR);
+
+		if (commands.length < 3) {
+			return new SlackTicTacToeResponse(ResponseType.ephemeral, Constant.INVALID_COMMAND, null);
 		}
 
-		// check if next move position is from the valid channel and player.
 		if (!isPlayersTurn(request, game)) {
-			return new SlackTicTacToeResponse(ResponseType.ephemeral, "Not your turn", null);
+			return new SlackTicTacToeResponse(ResponseType.ephemeral, game.getNextPlayer().getSlackUserName(), null);
 		}
 
 		int row = 0;
 		int col = 0;
 
 		try {
-			row = Integer.valueOf(tokens[1]);
-			col = Integer.valueOf(tokens[2]);
+			row = Integer.valueOf(commands[1]);
+			col = Integer.valueOf(commands[2]);
 		} catch (NumberFormatException e) {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid request", null);
 		}
@@ -69,8 +68,8 @@ public class MoveRequestProcessor implements RequestProcessor {
 							buildGameOverMessage(request.getChannelId(), game, null), null);
 				}
 			}
-			return new SlackTicTacToeResponse(ResponseType.ephemeral, getGameInProgressMessage(game, request, row, col),
-					null);
+			return new SlackTicTacToeResponse(ResponseType.in_channel,
+					getGameInProgressMessage(game, request, row, col), null);
 		} catch (Exception e) {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral, e.getMessage(), null);
 		}
@@ -78,35 +77,39 @@ public class MoveRequestProcessor implements RequestProcessor {
 
 	private String getGameInProgressMessage(Game game, SlackTicTacToeRequest request, int row, int col) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(request.getUserName())
-			.append(" marked at (")
-			.append(row)
-			.append(", ")
-			.append(col)
-			.append(")");
+		sb.append(game.getCurrentPlayer().getSlackUserName()).append(" last move was at (").append(row).append(", ")
+				.append(col).append(")");
+
 		sb.append(BoardUtil.drawCurrentBoardInGame(game));
+		sb.append("\n Your move :game_die: next ").append(game.getNextPlayer().getSlackUserName());
 		return sb.toString();
 	}
 
 	private String buildGameOverMessage(String channelId, Game game, Player winner) {
 		StringBuilder sb = new StringBuilder();
 		if (winner != null) {
-			sb.append("Congratulations " + winner.getUserName() + " for winning the game !! \n");
+			sb.append("Congratulations ").append(game.getCurrentPlayer().getSlackUserName())
+					.append(" for winning the game !! \n");
+			sb.append(BoardUtil.drawCurrentBoardInGame(game));
+			sb.append("\n");
+			sb.append("\n :tada:");
+			sb.append("\t:sparkles:");
+			sb.append("\t:fireworks:");
 		} else {
-			sb.append("Match drawn");
+			sb.append("Match is drawn");
+			sb.append(BoardUtil.drawCurrentBoardInGame(game));
+			sb.append("\n");
+			sb.append("\n :neutral_face: ");
 		}
 		// Attachment attachment = new Attachment();
 		// attachment.setText(BoardUtil.drawCurrentBoardInGame(game));
-		sb.append(BoardUtil.drawCurrentBoardInGame(game));
-		sb.append("\n :tada: ");
-		sb.append(":tada: ");
-		sb.append(":tada: ");
+
 		gameRepository.endGameInChannel(channelId);
 		return sb.toString();
 	}
 
 	private boolean isPlayersTurn(SlackTicTacToeRequest request, Game game) {
-		if (request.getUserId().equals(game.getCurrentPlayer())) {
+		if (game.getCurrentPlayer() != null && request.getUserId().equals(game.getCurrentPlayer().getUserId())) {
 			return false;
 		}
 		return true;
