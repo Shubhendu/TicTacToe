@@ -21,13 +21,12 @@ For the scope of this POC these values were stored in AWS environment.
 We are using maven to build this application.
 ` mvn clean install`
 
-### Deploy
+### Deployment
 - Local enviroment
 ``` 
-	-  $CATALINA_HOME: is an environment variable points to the directory where you installed Tomcat. For example, /Users/abc/Documents/software/apache-tomcat-8.5.23.
-	
 	1- Copy the .war file to $CATALINA_HOME/webapps/
-	2- Start the server by $CATALINA_HOME/bin/startup.sh 
+	2- Start the server by $CATALINA_HOME/bin/startup.sh
+	Note: $CATALINA_HOME: is an environment variable whcih points to the directory where you have installed Tomcat. For example, /Users/abc/Documents/software/apache-tomcat-8.5.23. 
 ```
 - On cloud
 This application is currently deployed on AWS Elastic Beanstalk. Instructions can be found here -
