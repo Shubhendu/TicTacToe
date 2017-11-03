@@ -32,11 +32,11 @@ We are using maven to build this application.
 - Cloud
 
 This application is currently deployed on AWS Elastic Beanstalk. 
-[Instructions can be found here](http://docs.aws.amazon.com/gettingstarted/latest/deploy/deploying-with-elastic-beanstalk.html)
+[AWS Deployment Details](http://docs.aws.amazon.com/gettingstarted/latest/deploy/deploying-with-elastic-beanstalk.html)
 
 
 ### Scope for improvements
-- Use caching service like Redis cache instead of in-memory map to store channel to game details.
+- Use caching service like Redis cache instead of in-memory map to store `channel to game` details.
 - Allow users to play with their own emojis.
 - Deploy with AWS auto scaling features turned on(for high load).
 - More tests.
