@@ -56,7 +56,6 @@ public class SlackTicTacToeController {
 	public SlackTicTacToeResponse play(HttpServletRequest request) {
 		try {
 			SlackTicTacToeRequest slackRequest = RequestUtil.buildRequest(request);
-			System.out.println("req: " + request.getParameter("token"));
 			return service.validateAndProcessRequest(slackRequest);
 		} catch (Exception e) {
 			LOGGER.error("Something went wrong", e);

@@ -44,7 +44,7 @@ public class MoveRequestProcessor implements RequestProcessor {
 		}
 
 		if (!isPlayersTurn(request, game)) {
-			return new SlackTicTacToeResponse(ResponseType.ephemeral, game.getNextPlayer().getSlackUserName(), null);
+			return new SlackTicTacToeResponse(ResponseType.ephemeral, "It is "+ game.getNextPlayer().getSlackUserName() + " turn to make next move", null);
 		}
 
 		try {
@@ -90,7 +90,7 @@ public class MoveRequestProcessor implements RequestProcessor {
 		.append(col)
 		.append(")")
 		.append(BoardUtil.drawCurrentBoardInGame(game))
-		.append("\n Your move :game_die: next ")
+		.append("\n Your :game_die: next ")
 		.append(game.getNextPlayer().getSlackUserName());
 		return sb.toString();
 	}

@@ -35,8 +35,7 @@ public class SlackClient {
 
 	private String buildSlackApiUrl(String channelId) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(environment.getProperty(Constant.SLACK_API_TOKEN))
-		.append(Constant.SLACK_BASE_URL).append("?token=")
+		sb.append(Constant.SLACK_BASE_URL).append("?token=")
 		.append(environment.getProperty(Constant.SLACK_API_TOKEN))
 		.append("&channel=").append(channelId);
 		return sb.toString();
