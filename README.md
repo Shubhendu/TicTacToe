@@ -22,13 +22,20 @@ We are using maven to build this application.
 ` mvn clean install`
 
 ### Deployment
-- Local enviroment
+- Local environment
 ``` 
 	1- Copy the .war file to $CATALINA_HOME/webapps/
 	2- Start the server by $CATALINA_HOME/bin/startup.sh
-	Note: $CATALINA_HOME: is an environment variable whcih points to the directory where you have installed Tomcat. For example, /Users/abc/Documents/software/apache-tomcat-8.5.23. 
+	Note: $CATALINA_HOME: is an environment variable whcih points to the directory where you have installed Tomcat. 
+	For example, /Users/abc/Documents/software/apache-tomcat-8.5.23. 
 ```
-- On cloud
-This application is currently deployed on AWS Elastic Beanstalk. Instructions can be found here -
-http://docs.aws.amazon.com/gettingstarted/latest/deploy/deploying-with-elastic-beanstalk.html
- 
+- Cloud
+This application is currently deployed on AWS Elastic Beanstalk. 
+[Instructions can be found here](http://docs.aws.amazon.com/gettingstarted/latest/deploy/deploying-with-elastic-beanstalk.html)
+
+
+### Scope for improvements
+- Use caching service like Redis cache instead of in-memory map to store channel to game details.
+- Allow users to play with their own emojis.
+- Deploy with AWS auto scaling features turned on(for high load).
+- More tests.
