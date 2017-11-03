@@ -7,8 +7,20 @@ import org.springframework.stereotype.Repository;
 
 import com.slackworld.tictactoe.model.Game;
 
+/**
+ * Repo layer.
+ * 
+ * @author SSingh
+ *
+ */
 @Repository
 public class GameRepositoryImpl implements GameRepository {
+	/*
+	 * Currently we are using a map to do in memory storage.
+	 * This can easily be configured to use something like REDIS or any other data storage.
+	 * With any change going in this layer, service clients would not be impacted by any ways.
+	 */
+	
 	private Map<String, Game> gameRepo;
 
 	public GameRepositoryImpl() {

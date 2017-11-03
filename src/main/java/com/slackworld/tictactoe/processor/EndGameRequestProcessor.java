@@ -11,6 +11,11 @@ import com.slackworld.tictactoe.model.Player;
 import com.slackworld.tictactoe.repository.GameRepository;
 import com.slackworld.tictactoe.util.Constant;
 
+/**
+ * Processor to end the current game
+ * @author SSingh
+ *
+ */
 @Service
 public class EndGameRequestProcessor implements RequestProcessor {
 

@@ -23,6 +23,7 @@ import com.slackworld.tictactoe.util.Constant;
 import com.slackworld.tictactoe.util.RequestUtil;
 
 /**
+ * Rest controller for this application
  * @author SSingh
  *
  */
@@ -33,13 +34,22 @@ public class SlackTicTacToeController {
 
 	@Autowired
 	private TicTacToeService service;
-
+	
+	/**
+	 * Health check API used by AWS for health check monitoring.
+	 * @return String
+	 */
 	@RequestMapping(value = { "/", "/health-check" }, method = RequestMethod.GET)
 	@ResponseBody
 	public String getMainPage() {
 		return "The awesome world of Tic Tac Toe is up and running !!";
 	}
-
+	
+	/**
+	 * POST API to play the game of tic tac toe from Slack
+	 * @param HttpServletRequest
+	 * @return SlackTicTacToeResponse
+	 */
 	@RequestMapping(value = "/play", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)

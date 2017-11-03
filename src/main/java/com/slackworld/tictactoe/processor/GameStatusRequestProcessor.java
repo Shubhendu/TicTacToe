@@ -11,6 +11,11 @@ import com.slackworld.tictactoe.repository.GameRepository;
 import com.slackworld.tictactoe.util.BoardUtil;
 import com.slackworld.tictactoe.util.Constant;
 
+/**
+ * Processor to provide status of current game to the clients.
+ * @author SSingh
+ *
+ */
 @Service
 public class GameStatusRequestProcessor implements RequestProcessor {
 

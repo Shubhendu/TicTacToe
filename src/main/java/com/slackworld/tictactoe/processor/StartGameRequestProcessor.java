@@ -15,6 +15,11 @@ import com.slackworld.tictactoe.model.Player;
 import com.slackworld.tictactoe.repository.GameRepository;
 import com.slackworld.tictactoe.util.Constant;
 
+/**
+ * Processor to start the game of tic tac toe.
+ * @author ssingh
+ *
+ */
 @Service
 public class StartGameRequestProcessor implements RequestProcessor {
 	@Autowired

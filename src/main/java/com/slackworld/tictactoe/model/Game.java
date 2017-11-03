@@ -2,6 +2,11 @@ package com.slackworld.tictactoe.model;
 
 import com.slackworld.tictactoe.enums.GameStatus;
 
+/**
+ * Model for current game.
+ * @author SSingh
+ *
+ */
 public class Game {
 	private Player player1;
 	private Player player2;

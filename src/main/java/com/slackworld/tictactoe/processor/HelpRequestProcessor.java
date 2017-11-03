@@ -9,6 +9,11 @@ import com.slackworld.tictactoe.enums.ResponseType;
 import com.slackworld.tictactoe.util.BoardUtil;
 import com.slackworld.tictactoe.util.Constant;
 
+/**
+ * Processor that would provide help message to client.
+ * @author ssingh
+ *
+ */
 @Service
 public class HelpRequestProcessor implements RequestProcessor {
 
@@ -16,7 +21,11 @@ public class HelpRequestProcessor implements RequestProcessor {
 	public SlackTicTacToeResponse process(SlackTicTacToeRequest request) {
 		return buildHelpResponse();
 	}
-
+	
+	/**
+	 * Private helper method to build help message for the client.
+	 * @return
+	 */
 	private SlackTicTacToeResponse buildHelpResponse() {
 		SlackTicTacToeResponse response = new SlackTicTacToeResponse();
 		response.setResponse_type(ResponseType.ephemeral);

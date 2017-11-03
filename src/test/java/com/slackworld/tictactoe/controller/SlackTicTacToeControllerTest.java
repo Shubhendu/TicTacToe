@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.tomcat.util.bcel.classfile.ConstantFloat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,10 +52,6 @@ public class SlackTicTacToeControllerTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		mockHttpServletRequest.addParameter("token", ConstantForTests.DUMMY_TOKEN);
-		mockHttpServletRequest.addParameter("channel_id", ConstantForTests.DUMMY_CHANNEL_ID);
-		mockHttpServletRequest.addParameter("user_id", ConstantForTests.DUMMY_USER_ID);
-		mockHttpServletRequest.addParameter("user_name", ConstantForTests.DUMMY_USER_NAME);
 		mockHttpServletRequest.addParameter("text", ConstantForTests.DUMMY_TEXT);
 		request = RequestUtil.buildRequest(mockHttpServletRequest);
 		response = new SlackTicTacToeResponse(ResponseType.ephemeral, "Game started", null);

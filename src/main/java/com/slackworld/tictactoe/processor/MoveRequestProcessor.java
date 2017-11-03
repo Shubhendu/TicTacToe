@@ -13,6 +13,12 @@ import com.slackworld.tictactoe.repository.GameRepository;
 import com.slackworld.tictactoe.util.BoardUtil;
 import com.slackworld.tictactoe.util.Constant;
 
+/**
+ * Processor to mark next move by the players.
+ * 
+ * @author ssingh
+ *
+ */
 @Service
 public class MoveRequestProcessor implements RequestProcessor {
 
@@ -41,19 +47,19 @@ public class MoveRequestProcessor implements RequestProcessor {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral, game.getNextPlayer().getSlackUserName(), null);
 		}
 
-		int row = 0;
-		int col = 0;
-
 		try {
-			row = Integer.valueOf(commands[1]);
-			col = Integer.valueOf(commands[2]);
+			int row = Integer.valueOf(commands[1]);
+			int col = Integer.valueOf(commands[2]);
+			return updateBoardWithCurrentMove(request, game, row, col);
 		} catch (NumberFormatException e) {
 			return new SlackTicTacToeResponse(ResponseType.ephemeral, "Invalid request", null);
 		}
+	}
 
-		Player currentPlayer = new Player(request.getUserId(), request.getUserName());
-
+	private SlackTicTacToeResponse updateBoardWithCurrentMove(SlackTicTacToeRequest request, Game game, int row,
+			int col) {
 		try {
+			Player currentPlayer = new Player(request.getUserId(), request.getUserName());
 			game.move(row, col, currentPlayer);
 			if (!GameStatus.IN_PROGRESS.equals(game.getStatus())) {
 				switch (game.getStatus()) {
@@ -77,33 +83,35 @@ public class MoveRequestProcessor implements RequestProcessor {
 
 	private String getGameInProgressMessage(Game game, SlackTicTacToeRequest request, int row, int col) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(game.getCurrentPlayer().getSlackUserName()).append(" last move was at (").append(row).append(", ")
-				.append(col).append(")");
-
-		sb.append(BoardUtil.drawCurrentBoardInGame(game));
-		sb.append("\n Your move :game_die: next ").append(game.getNextPlayer().getSlackUserName());
+		sb.append(game.getCurrentPlayer().getSlackUserName())
+		.append(" last move was at (")
+		.append(row)
+		.append(", ")
+		.append(col)
+		.append(")")
+		.append(BoardUtil.drawCurrentBoardInGame(game))
+		.append("\n Your move :game_die: next ")
+		.append(game.getNextPlayer().getSlackUserName());
 		return sb.toString();
 	}
 
 	private String buildGameOverMessage(String channelId, Game game, Player winner) {
 		StringBuilder sb = new StringBuilder();
 		if (winner != null) {
-			sb.append("Congratulations ").append(game.getCurrentPlayer().getSlackUserName())
-					.append(" for winning the game !! \n");
-			sb.append(BoardUtil.drawCurrentBoardInGame(game));
-			sb.append("\n");
-			sb.append("\n :tada:");
-			sb.append("\t:sparkles:");
-			sb.append("\t:fireworks:");
+			sb.append("Congratulations ")
+			.append(game.getCurrentPlayer().getSlackUserName())
+			.append(" for winning the game !! \n")
+			.append(BoardUtil.drawCurrentBoardInGame(game))
+			.append("\n")
+			.append("\n :tada:")
+			.append("\t:sparkles:")
+			.append("\t:fireworks:");
 		} else {
-			sb.append("Match is drawn");
-			sb.append(BoardUtil.drawCurrentBoardInGame(game));
-			sb.append("\n");
-			sb.append("\n :neutral_face: ");
+			sb.append("Match is drawn")
+			.append(BoardUtil.drawCurrentBoardInGame(game))
+			.append("\n")
+			.append("\n :neutral_face: ");
 		}
-		// Attachment attachment = new Attachment();
-		// attachment.setText(BoardUtil.drawCurrentBoardInGame(game));
-
 		gameRepository.endGameInChannel(channelId);
 		return sb.toString();
 	}

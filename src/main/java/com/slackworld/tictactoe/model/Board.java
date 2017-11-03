@@ -1,5 +1,10 @@
 package com.slackworld.tictactoe.model;
 
+/**
+ * Model to store tic tac toe board
+ * @author SSingh
+ *
+ */
 public class Board {
 	private int[] rows;
 	private int[] cols;

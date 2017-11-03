@@ -1,5 +1,10 @@
 package com.slackworld.tictactoe.model;
 
+/**
+ * Model for Channel.
+ * @author ssingh
+ *
+ */
 public class Channel {
 	private String id;
 	private String name;

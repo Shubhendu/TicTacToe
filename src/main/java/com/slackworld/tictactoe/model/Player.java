@@ -1,5 +1,10 @@
 package com.slackworld.tictactoe.model;
 
+/**
+ * Model for player.
+ * @author SSingh
+ *
+ */
 public class Player {
 	private String userId;
 	private String userName;

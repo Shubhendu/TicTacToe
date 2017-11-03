@@ -10,8 +10,18 @@ import org.springframework.web.client.RestTemplate;
 import com.google.gson.Gson;
 import com.slackworld.tictactoe.util.Constant;
 
+/**
+ * REST Service class that makes Slack Channel.info API call to get information about users in channel.
+ * More info here - https://api.slack.com/methods/channels.info
+ * @author ssingh
+ *
+ */
 @Service
 public class SlackClient {
+	
+	@Autowired
+	private Environment environment;
+
 	class SlackApiResponse {
 		String ok;
 		Channel channel;
@@ -23,13 +33,18 @@ public class SlackClient {
 		List<String> members;
 	}
 
-	@Autowired
-	private Environment environment;
+	private String buildSlackApiUrl(String channelId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(environment.getProperty(Constant.SLACK_API_TOKEN))
+		.append(Constant.SLACK_BASE_URL).append("?token=")
+		.append(environment.getProperty(Constant.SLACK_API_TOKEN))
+		.append("&channel=").append(channelId);
+		return sb.toString();
+
+	}
 
 	private String callSlackChannelInfoApi(String channelId) {
-		String apiToken = environment.getProperty(Constant.SLACK_API_TOKEN);
-		String uri = Constant.SLACK_BASE_URL + "?token=" + apiToken + "&channel=" + channelId;
-
+		String uri = buildSlackApiUrl(channelId);
 		RestTemplate restTemplate = new RestTemplate();
 		return restTemplate.getForObject(uri, String.class);
 	}
