@@ -19,6 +19,7 @@ For the scope of this POC these values were stored in AWS environment.
 
 ### Build
 We are using maven to build this application.
+
 ` mvn clean install`
 
 ### Deployment
