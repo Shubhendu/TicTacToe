@@ -1,10 +1,5 @@
 # Play a game of Tic Tac Toe in a slack channel
 
-```shell
-X|O|X
-O|X|O
-X|O|X
-```
 ![TIC TAC TOE](/src/main/resources/image.png?raw=true "Sample Board")
 
 ### Supported commands
@@ -15,11 +10,17 @@ X|O|X
 - `/ttt help` - Help
 
 
-### Build
-
-
 ### Configure
+Please setup values for following tokens in your environment - 
+- SLACK_TTT_TOKEN - Verification token for this Slack command
+- SLACK_API_TOKEN - Slack API token
+
+For the scope of this POC these values were stored in AWS environment.
+
+### Build
+``` mvn clean install
+```
 
 ### Deploy
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+Once the war file is created for this application it can be deployed on any application server. For the scope of this POC this was deployed on AWS Elastic Beanstalk. 
