@@ -1,4 +1,4 @@
-# Play a game of Tic Tac Toe in a slack channel
+# Tic Tac Toe application for a slack channel
 
 ![TIC TAC TOE](/src/main/resources/image.png?raw=true "Sample Board")
 
@@ -10,7 +10,7 @@
 - `/ttt help` - Help
 
 
-### Configure
+### Configuration
 Please setup values for following tokens in your environment - 
 - SLACK_TTT_TOKEN - Verification token for this Slack command
 - SLACK_API_TOKEN - Slack API token
@@ -18,9 +18,18 @@ Please setup values for following tokens in your environment -
 For the scope of this POC these values were stored in AWS environment.
 
 ### Build
-``` mvn clean install
-```
+We are using maven to build this application.
+` mvn clean install`
 
 ### Deploy
-
-Once the war file is created for this application it can be deployed on any application server. For the scope of this POC this was deployed on AWS Elastic Beanstalk. 
+- Local enviroment
+``` 
+	-  $CATALINA_HOME: is an environment variable points to the directory where you installed Tomcat. For example, /Users/abc/Documents/software/apache-tomcat-8.5.23.
+	
+	1- Copy the .war file to $CATALINA_HOME/webapps/
+	2- Start the server by $CATALINA_HOME/bin/startup.sh 
+```
+- On cloud
+This application is currently deployed on AWS Elastic Beanstalk. Instructions can be found here -
+http://docs.aws.amazon.com/gettingstarted/latest/deploy/deploying-with-elastic-beanstalk.html
+ 
